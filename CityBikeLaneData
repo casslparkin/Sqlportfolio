@@ -75,18 +75,17 @@ INSERT INTO BIT_DB.CityBikeLanes values(60,2002, 2021,"Mouse",4.5,4.3,"no");
 
 WITH safety_average_cte AS (
 SELECT street, AVG(safetyrating) as 'rating'
-FROM citybikelanes
-GROUP BY street)
-SELECT street,rating,
-'safe lane' as 'label'
-FROM safety_average_cte
-WHERE rating >=4;
+  FROM citybikelanes
+  GROUP BY street)
+ SELECT street,rating,'safe lane' as 'label'
+   FROM safety_average_cte
+   WHERE rating >=4;
 
 SELECT street, safetyrating,
-AVG(safetyrating) OVER(Partition BY street) as "Average_safety_rating",
-  CASE 
-    WHEN "Average_safety_rating" >=4 THEN "Leave As Is"
-    WHEN "Average_safety_rating" <2.5 THEN "Remove"
-    ELSE "Improvements Needed"
- END AS "Reommendations for Sidewalk Improvements"
+   AVG(safetyrating) OVER(Partition BY street) as "Average_safety_rating",
+      CASE 
+        WHEN "Average_safety_rating" >=4 THEN "Leave As Is"
+        WHEN "Average_safety_rating" <2.5 THEN "Remove"
+        ELSE "Improvements Needed"
+     END AS "Reommendations for Sidewalk Improvements"
 FROM CityBikeLanes;
