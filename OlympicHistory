@@ -1,0 +1,45 @@
+DROP TABLE IF EXISTS OLYMPICS_HISTORY;
+CREATE TABLE IF NOT EXISTS OLYMPICS_HISTORY
+(
+    id          INT,
+    name        VARCHAR,
+    sex         VARCHAR,
+    age         VARCHAR,
+    height      VARCHAR,
+    weight      VARCHAR,
+    team        VARCHAR,
+    noc         VARCHAR,
+    games       VARCHAR,
+    year        INT,
+    season      VARCHAR,
+    city        VARCHAR,
+    sport       VARCHAR,
+    event       VARCHAR,
+    medal       VARCHAR
+);
+
+
+DROP TABLE IF EXISTS OLYMPICS_HISTORY_NOC_REGIONS;
+CREATE TABLE IF NOT EXISTS OLYMPICS_HISTORY_NOC_REGIONS
+(
+    noc         VARCHAR,
+    region      VARCHAR,
+    notes       VARCHAR
+);
+
+select * from OLYMPICS_HISTORY;
+
+select * from OLYMPICS_HISTORY_NOC_REGIONS;
+
+SELECT DISTINCT year, season, city 
+FROM Olympics_History
+Order by year;
+
+ with CTE as
+        (SELECT oh.games, oh.team, nr.region
+        FROM olympics_history as oh
+        JOIN olympics_history_noc_regions as nr ON nr.noc = oh.noc
+        GROUP BY oh.games, oh.team, nr.region)
+   SELECT games, count(distinct team) as Total_Countries_to_Participate, count(region) as total_regions
+    FROM CTE
+    GROUP BY games;
